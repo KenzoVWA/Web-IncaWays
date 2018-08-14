@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<meta charset="UTF-8"></meta>
+<head th:replace="layout/layout :: head"></head>
+<body>
+	<header th:replace="layout/layout :: header"></header>
+	
+	<div class="container py-3">
+		<div class="row">
+			<div class="col-sm-12 col-centered">
+				<br>
+				<h2 th:text="'Estadia #' + ${estadiaV.id}"></h2>
+				<div class="card">
+				  <div class="card-header bg-dark" style="color:white!important;" >Detalles</div>
+				  <div class="card-body bg-default">
+				  	<p th:text="'Empresa: ' + ${estadiaV.empresaestadia.nombre}"></p>
+				  	<p th:text="'Pais: ' + ${estadiaV.pais}"></p>
+				  	<p th:text="'Ciudad: ' + ${estadiaV.ciudad}"></p>
+				  	<p th:text="'Direccion: ' + ${estadiaV.direccion}"></p>
+				  	<p th:text="'Costo por dia: $' + ${estadiaV.costoxdia}"></p>
+				  	<p th:text="'Tipo de estadia: ' + ${estadiaV.tipoestadia}"></p>
+				  </div>
+				</div>
+				
+				<br>
+				
+				<form th:action="@{/estadia/ver/} + ${estadiaV.id}" th:object="${compraestadia}" method="post">
+					  <div class="form-group bg-default">
+					    <label for="nrodias">Seleccione el numero de dias: </label>
+					    <input class="form-control" type="number" th:field="*{nrodias}" id="nrodias" step="1" min="0" max="100">
+					    
+					    
+					    <!-- Inputs para calcular el total -->
+					    <input type="hidden" th:value="${estadiaV.costoxdia}" id="costoxdia">
+					    <label for="total">Total: </label>
+					    <br>
+					    <input type="text" id="total" class="form-control" disabled>
+					  </div>
+					 
+					  <div class="card" sec:authorize="!isAuthenticated()">
+						  	<div class="card-header bg-warning" style="color:white!important;">Advertencia</div>
+						  	<div class="card-body">
+						  		<p>Para realizar la compra debe <a th:href="@{/usuario/registrar}">registrarse</a>.</p>
+								<br>
+								<p>Si ya tiene una cuenta ingrese.</p>
+								<div class="btn-group">
+									<a class="btn btn-light" th:href="@{/estadia/listar}">Volver</a>
+									<a class="btn btn-dark" th:href="@{/login}">Iniciar sesión</a>
+								</div>
+						  	</div>
+					  </div>
+					 
+					  <div class="btn-group bg-default" sec:authorize="hasRole('ROLE_Cliente')">
+						<a class="btn btn-light" th:href="@{/estadia/listar}">Volver</a>
+						<button type="submit" class="btn btn-dark" onclick="return confirm('Está seguro que desea realizar la compra?')">Comprar</button>
+						
+						th:onclick="|loadContent('${data.path}')|"
+			    	  </div>
+				</form>
+				
+				
+			</div>
+		</div><!-- .row -->
+	</div><!-- .container py-3 -->
+	<!-- Contenido Principal -->
+	<footer th:replace="layout/layout :: footer"></footer>
+	<script th:src="@{/js/compraestadia/CalcularTotal.js}"></script>
+</body>
+</html>

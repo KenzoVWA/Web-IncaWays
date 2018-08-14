@@ -1,0 +1,9 @@
+
+.contenedor{
+	width: 98%;
+	margin: 0 auto;
+}
+
+.bg-transparent{
+	background-color:inherit!important;
+}
